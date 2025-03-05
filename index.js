@@ -50,7 +50,7 @@ const db = new Pool({
 app.use(
     session({
         store: new pgSession({
-            pool: pool, // Use PostgreSQL for sessions
+            pool: db, // Use PostgreSQL for sessions
             tableName: "session", // Default is "session"
         }),
         secret: process.env.SESSION_SECRET || "your-secret-key",
