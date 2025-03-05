@@ -1,0 +1,82 @@
+        </main>
+    </div>
+
+    <footer class="bg-dark text-white py-3 mt-5">
+        <div class="container text-center">
+            <p>Copyright © <%= new Date().getFullYear() %></p>
+        </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        // PRINT FUNCTION
+        function printTable() {
+            // var getTable=document.getElementById("bookTable");
+            // getTable.setAttribute('border', '1px');
+            // getTable.setAttribute('cellpadding', '10');
+            // getTable.setAttribute('width', '100%');
+            // newPrint=window.open("");
+            // newPrint.document.write(getTable.outerHTML);
+            // newPrint.print();
+            // newPrint.close();
+
+            const printWindow = window.open('', '', 'height=600,width=800');
+      const table = document.getElementById('bookTable');
+      
+      printWindow.document.write('<html><head><title>Print Table</title>');
+      printWindow.document.write('<style>');
+      printWindow.document.write('table { font-size: 8px; width: 100%; border-collapse: collapse; }');
+      printWindow.document.write('th, td { padding: 8px; border: 1px solid #ddd; text-align: left; }');
+      printWindow.document.write('@media print { table { font-size: 8px; } th, td { padding: 5px; } .exclude {display: none;} }');
+      printWindow.document.write('</style></head><body>');
+      printWindow.document.write(table.outerHTML); // Write the table HTML
+      printWindow.document.write('</body></html>');
+      printWindow.document.close(); // Close the document to prepare it for printing
+      printWindow.print(); // Trigger the print dialog
+        }
+
+        // CALCULATE GOOD AND DAMGE FOR TOTAL NUMBER OF BOOKS
+        function calculateBooks() {
+            var goodBookNo = parseFloat(document.getElementById("good").value) || 0;
+            var damageBookNo = parseFloat(document.getElementById("damage").value) || 0;
+
+            var total = goodBookNo + damageBookNo;
+
+            document.getElementById("total").value = total;
+        }
+
+        function calculateBooksModal() {
+            var goodBookNo = parseFloat(document.getElementById("modGood").value) || 0;
+            var damageBookNo = parseFloat(document.getElementById("modDamage").value) || 0;
+
+            var total = goodBookNo + damageBookNo;
+
+            document.getElementById("modTotal").value = total;
+        }
+        
+        // MODAL
+        $('#editBook').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            var bookId = button.data("id");
+            var bookName = button.data("name");
+            var dateReceived = button.data("received");
+            var good = button.data("good");
+            var damage = button.data("damage");
+            var total = button.data("total");
+
+        var modal = $(this);
+            modal.find(".modal-title").text("Edit Item");
+            modal.find("#modId").val(bookId);
+            modal.find("#modBookName").val(bookName);
+            modal.find("#modDateReceived").val(dateReceived);
+            modal.find("#modGood").val(good);
+            modal.find("#modDamage").val(damage);
+            modal.find("#modTotal").val(total);
+            modal.find(".editForm").attr("action", "/edit" + bookId);
+        });
+
+        </script>
+</body>
+</html>

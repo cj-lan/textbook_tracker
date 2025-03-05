@@ -1,0 +1,28 @@
+main {
+    min-height: 88vh;
+}
+
+.centered {
+    padding-top: 200px;
+    text-align: center;
+}
+
+.form-control[readonly] {
+    border-radius: 0;
+    border: none;
+    border-bottom: 2px solid #007bff;
+    background-color: transparent;
+    color: #495057;
+    cursor: not-allowed;
+}
+
+.table td .title {
+    font-weight: bold;
+    color: #007bff;
+}
+
+.table td .info {
+color: #555;
+font-style: italic;
+font-weight: lighter;
+}

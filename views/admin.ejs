@@ -1,0 +1,135 @@
+<%- include("partials/header.ejs") %>
+
+<div class="container my-2">
+    <div class="row">
+        <div class="col-md-6">
+            <h1>Managing Textbook</h1>
+            <h3>Distribution and Returns</h3>
+        </div>
+        <div class="col-md-6">
+            <div class="d-flex justify-content-end align-items-">
+                <h5>Welcome, <%= user.username %></h5>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container my-2">
+    <hr />
+    <form class="row" action="/submit" method="POST">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="bookName" class="form-label">Book Name</label>
+                    <input type="text" name="bookName" class="form-control" id="bookName">
+                </div>
+                <div class="form-group">
+                    <label for="dateReceived" class="form-label">Date Received</label>
+                    <input type="date" name="dateReceived" class="form-control" id="dateReceived">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="good" class="form-label">Good</label>
+                            <input type="number" name="good" class="form-control" id="good" oninput="calculateBooks()">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="damage" class="form-label">Damage</label>
+                            <input type="number" name="damage" class="form-control" id="damage" oninput="calculateBooks()">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="total" class="form-label">Total</label>
+                            <input type="number" name="total" class="form-control" id="total" value="0" readonly>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="d-flex justify-content-center mt-4">
+                    <button type="submit" class="btn btn-primary mt-auto">Submit</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="container">
+    <hr />
+</div>
+
+<div class="container my-4"> 
+    <div class="row">
+        <!-- IF ROLE IS ADMIN -->
+        <div class="col-md-1">
+            <button type="submit" class="btn btn-outline-primary" onclick="printTable();"> Print </button>
+        </div>
+        <div class="col-md-9">
+            <form method="GET" action="/searchadmin">
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" name="search" value="<%= searchTerm %>" placeholder="Search..">
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-dark"> Search </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-outline-secondary w-100" disabled>
+                Reset
+            </button>
+        </div>
+
+        <!-- IF ROLE IS ADMIN -->
+        <% if (data.length > 0) { %>
+        <form action="update" method="POST">
+            <table class="table table-striped" id="bookTable">
+                <tr>
+                    <th>Book Name</th>
+                    <th>Date Received</th>
+                    <th>Good</th>
+                    <th>Damage</th>
+                    <th>Total</th>
+                    <th>Returned</th>
+                    <th class="exclude">Action</th>
+                </tr>
+                <% data.forEach(entry => { %>
+                    <tr>
+                        <td><%= entry.book_name %></td>
+                        <td><%= entry.date_received %></td>
+                        <td><%= entry.good %></td>
+                        <td><%= entry.damage %></td>
+                        <td><%= entry.total %></td>
+                        <td>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="checkbox_<%= entry.book_id %>" <%= entry.returned ? 'checked' :  "" %> />
+                            </div> 
+                        </td>
+                        <td class="exclude">
+                            <a href="/edit/<%= entry.book_id %>" class="btn btn-info">Edit</a>
+                            <a href="/delete/<%= entry.book_id %>" class="btn btn-danger">Delete</a>
+                        </td>
+                    </tr>
+                <% }); %>
+            </table>
+            <% } else { %>
+                <div class="alert alert-info">
+                    No results found..
+                </div>
+            <% } %>
+            <div class="d-flex justify-content-end">
+                <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+<%- include("partials/footer.ejs") %>

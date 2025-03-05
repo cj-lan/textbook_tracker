@@ -1,0 +1,132 @@
+        <%- include("partials/header.ejs") %>
+
+        <div class="container my-2">
+            <div class="row">
+                <h1>Managing Textbook</h1>
+                <h3>Distribution and Returns</h3>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Section: </h5>
+                </div>
+                <div class="col-md-6">
+                    <div class="d-flex justify-content-end">
+                        <h5>Welcome, <%= user.username %></h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container my-2">
+            <hr />
+        </div>
+
+        <div class="container my-4"> 
+            <div class="row">
+
+                <div class="col-md-3">
+                    <div class="row">
+                        <form action="/submit" method="POST">
+                            <div class="form-group">
+                                <label for="bookName" class="form-label">Book Name</label>
+                                <input type="text" name="bookName" class="form-control" id="bookName">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="dateReceived" class="form-label">Date Received</label>
+                                <input type="date" name="dateReceived" class="form-control" id="dateReceived">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="good" class="form-label">Good</label>
+                                <input type="number" name="good" class="form-control" id="good" oninput="calculateBooks()">
+                            </div>
+
+
+                            <div class="form-group">
+                                <label for="damage" class="form-label">Damage</label>
+                                <input type="number" name="damage" class="form-control" id="damage" oninput="calculateBooks()">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="total" class="form-label">Total</label>
+                                <input type="number" name="total" class="form-control" id="total" value="0" readonly>
+                            </div>
+
+                            <div class="d-flex justify-content-center mt-4">
+                                <button type="submit" class="btn btn-primary mt-auto">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="col-md-1 d-flex justify-content-center" style="min-height: 100%;">
+                    <div class="vr"></div>
+                </div>
+
+                <div class="col-md-8">
+                    <div class="row">
+                        <!-- PRINT -->
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-outline-primary" onclick="printTable()"> Print </button>
+                        </div>
+                        <!-- SEARCH -->
+                        <div class="col-md-10">
+                            <form method="GET" action="/search">
+                                <div class="input-group mb-3">
+                                    <input type="text" class="form-control" name="search" value="<%= searchTerm %>" placeholder="Search..">
+                                    <div class="input-group-append">
+                                        <button type="submit" class="btn btn-dark"> Search </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <% if (data.length > 0) { %>
+                        <table class="table table-striped-columns" id="bookTable">
+                            <tr>
+                                <th>Book Name</th>
+                                <th>Date Received</th>
+                                <th>book Count</th>
+                                <th>Status</th>
+                                <th class="exclude">Action</th>
+                            </tr>
+                            <% data.forEach(entry => { %>
+                                <tr>
+                                    <td><%= entry.book_name %></td>
+                                    <td><%= entry.date_received %></td>
+                                    <td>
+                                        <div class="title text-success">
+                                            Good: <span class="info"><%= entry.good %></span>
+                                        </div>
+                                        <div class="title text-danger">
+                                            Damage: <span class="info"><%= entry.damage %></span>
+                                        </div>
+                                        <hr />
+                                        <div class="title">
+                                            Total: <span class="info"><%= entry.total %></span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <%= entry.returned ? "Returned" :  "Not Returned" %>
+                                    </td>
+                                    <td class="exclude">
+                                        <a href="/edit/<%= entry.book_id %>" class="btn btn-info">Edit</a>
+                                    </td>
+                                </tr>
+                            <% }); %>
+                        </table>
+                        <% } else { %>
+                            <div class="alert alert-info">
+                                No results found..
+                            </div>
+                        <% } %>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <%- include("partials/footer.ejs") %>
