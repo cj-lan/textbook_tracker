@@ -6,12 +6,15 @@ import session from "express-session";
 import passport from "passport";
 import {Strategy} from "passport-local";
 import "dotenv/config";
+import connectPgSimple from "connect-pg-simple";
 
 
 const app = express();
 const port = 3000;
 const saltRounds = 10;
 
+const { Pool } = pg;
+const pgSession = connectPgSimple(session);
 
 // MIDDLEWARE AND STYLING FOLDER
 app.use(express.static("public"));
@@ -31,15 +34,34 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // DATABASE CONNECTION
-const db = new pg.Client({
-    user: process.env.DB_USER,
-    host: process.env.DB_HOST,
-    database: process.env.DB_DATABASE,
-    password: process.env.DB_PASSWORD,
-    port: process.env.DB_PORT,
+// const db = new pg.Client({
+//     user: process.env.DB_USER,
+//     host: process.env.DB_HOST,
+//     database: process.env.DB_DATABASE,
+//     password: process.env.DB_PASSWORD,
+//     port: process.env.DB_PORT,
+// });
+// db.connect();
+const db = new Pool({
+    connectionString: process.env.DATABASE_URL,
+    ssl: process.env.NODE_ENV === "production" ? { rejectUnauthorized: false } : false
 });
-db.connect();
 
+app.use(
+    session({
+        store: new pgSession({
+            pool: pool, // Use PostgreSQL for sessions
+            tableName: "session", // Default is "session"
+        }),
+        secret: process.env.SESSION_SECRET || "your-secret-key",
+        resave: false,
+        saveUninitialized: false,
+        cookie: {
+            secure: process.env.NODE_ENV === "production", // Set to true in production (HTTPS required)
+            maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
+        },
+    })
+);
 
 // GET ROUTES
 app.get("/", (req, res) => {
