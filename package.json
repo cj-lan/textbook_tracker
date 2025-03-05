@@ -4,11 +4,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "pm2 start index.js --name textbook_tracker",
-    "stop": "pm2 stop textbook_tracker",
-    "restart": "pm2 restart textbook_tracker",
-    "delete": "pm2 delete textbook_tracker"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
