@@ -53,7 +53,7 @@ app.use(
             pool: db, // Use PostgreSQL for sessions
             tableName: "session", // Default is "session"
         }),
-        secret: process.env.SESSION_SECRET || "your-secret-key",
+        secret: process.env.SESSION_SECRET || "thisissecret",
         resave: false,
         saveUninitialized: false,
         cookie: {
